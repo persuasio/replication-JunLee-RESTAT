@@ -67,7 +67,7 @@ foreach x in `covariates' {
 * We regress Treatment on ALL covariates to test if they jointly predict treatment.
 * The Null Hypothesis is that all coefficients are jointly zero (Balance holds).
 
-reg treat `covariates', cl(id_date)
+eststo jointbal: reg treat `covariates', cl(id_date)
 testparm `covariates'
 local joint_p = r(p)
 local joint_f = r(F)
@@ -79,15 +79,44 @@ local p_str : display %9.3f `joint_p'
 * 4. GENERATE LATEX TABLE
 * ------------------------------------------------------------------------------
 
-esttab bal_* using "balance_test.tex", replace ///
+esttab bal_* using "balance_test1.tex", replace ///
     b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) ///
     label booktabs ///
     keep(treat) ///
     coeflabels(treat "Difference (Treat - Control)") ///
     mtitles("Male" "Age" "HS" "Coll" "Inc50" "Inc75" "Inc100" "Empl") ///
-    title("Covariate Balance Test (3-Day Window)") ///
-    addnotes("Standard errors clustered by debate ID." "Joint F-test p-value: `p_str'") ///
+    title("Covariate Balance Check 1 (3-Day Window)") ///
+	addnotes("Standard errors clustered by debate ID.") ///
+    nonotes
+	
+	
+	
+esttab jointbal using "balance_test2.tex", replace ///
+    b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) ///
+    label booktabs ///
+	varlabels( ///
+        male        "Male" ///
+        age         "Age" ///
+        highschoolm "HS" ///
+        college     "Coll" ///
+        income50    "Inc50" ///
+        income75    "Inc75" ///
+        income100   "Inc100" ///
+        employed    "Empl" ///
+    ) ///
+	drop(_cons) ///
+    title("Covariate Balance Check 2 (3-Day Window)") ///
+	mtitles("Treat") ///
+    addnotes("Standard errors clustered by debate ID." ///
+			 "Joint F-test p-value: `p_str'") ///
     nonotes
     
+	
+	
 * Display in Stata window
-esttab bal_*, keep(treat) b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) label mtitles addnotes("Joint p-value: `p_str'")
+esttab bal_*, keep(treat) b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) label mtitles
+
+esttab jointbal, b(3) se(3) star(* 0.10 ** 0.05 *** 0.01) label addnotes("Joint F-test p-value: `p_str'") 
+
+
+
