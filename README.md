@@ -34,7 +34,7 @@ Running `run.do` produces the following files in the replication folder:
 | Output file                    | Description                              | Paper reference        |
 |-------------------------------|------------------------------------------|------------------------|
 | `tv_debate_combined_final.tex` | Table: upper bounds on ATE, APR, R-APR, and proportions of AP and NP types | Table in Section 7     |
-| `balance_test.tex`             | Covariate balance test across pre- and post-debate groups | Section 7 (p-value = 0.445) |
+| `balance_test1.tex`, `balance_test2.tex` | Covariate balance test across pre- and post-debate groups | Section 7 (p-value = 0.445) |
 
 ## Instructions
 
